@@ -1,0 +1,70 @@
+version: "2"
+
+run:
+  timeout: 5m
+  build-tags:
+    - test
+
+issues:
+  max-same-issues: 0 # 0 = 無制限（同じissueの表示数制限を解除）
+
+formatters:
+  enable:
+    - gofmt
+
+linters:
+  default: all
+  disable:
+    - depguard
+    - lll
+    - mnd
+    - revive
+    - dupl
+    - err113
+    - exhaustruct
+    - funcorder
+    - gochecknoglobals
+    - gochecknoinits
+    - gocritic
+    - gosmopolitan
+    - intrange
+    - nlreturn
+    - tagliatelle
+    - usetesting
+    - varnamelen
+    - wrapcheck
+    - wsl
+    - embeddedstructfieldcheck
+    - noinlineerr
+    - whitespace
+    - wsl_v5
+    - godox
+  settings:
+    ireturn:
+      allow:
+        # Default: [anon, error, empty, stdlib]
+        - anon
+        - error
+        - empty
+        - stdlib
+
+        - "generic" # ジェネリック型を許可
+  exclusions:
+    rules:
+      # Exclude some linters from running on tests files.
+      - path: _test\.go
+        linters:
+          - funlen
+          - goconst
+          - maintidx
+          - cyclop
+      # seedはデータをたくさん作るために長くなることが多いので除外
+      - path: cmd/seed/
+        linters:
+          - funlen
+      - path: cmd/enumgen/main.go
+        linters:
+          # Exclude file from gosec checks
+          # G301: Expect directory permissions to be 0750 or less (gosec)
+          # G306: Expect WriteFile permissions to be 0600 or less (gosec)
+          - gosec
